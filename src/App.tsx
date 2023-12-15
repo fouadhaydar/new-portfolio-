@@ -4,26 +4,38 @@ import Portfolio from "./components/portfolio/Portfolio";
 import Contact from "./components/contact/Contact";
 import "./index.css";
 import AboutMe from "./components/aboutMe/AboutMe";
+import { IconButton } from "@mui/material";
+import { ArrowUpward } from "@mui/icons-material";
 
 function App() {
   return (
-    <main className="w-[100vw] min-h-[100vh]">
+    <main>
       <div
         className="bg-hero-pattern bg-cover bg-no-repeat bg-center"
-        style={{
-          scrollSnapAlign: "start",
-        }}
+        // scroll-snap-type: y mandatory;
       >
-        <Nav home={true} />
+        {/* <Nav /> */}
         <Hero />
       </div>
       <Portfolio />
       <AboutMe />
       <Contact />
-      <div
-        className="fixed right-[10px] bottom-[10px] rounded-full bg-white w-10 h-10"
-        onClick={() => window.scrollTo(0, 0)}
-      />
+      {window.innerWidth >= 500 && (
+        <IconButton
+          onClick={() => window.scrollTo(0, 0)}
+          color="primary"
+          style={{
+            position: "fixed",
+            right: "20px",
+            bottom: "10px",
+            backgroundColor: "white",
+            width: "40px",
+            height: "40px",
+          }}
+        >
+          <ArrowUpward />
+        </IconButton>
+      )}
     </main>
   );
 }

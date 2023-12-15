@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import TextHeading from "./TextHeading";
 import SvgAnimation from "./SvgAnimation";
 import { useRef } from "react";
+import Nav from "./Nav";
 
 const Hero = () => {
   const targetRef = useRef<HTMLDivElement>(null);
@@ -12,17 +13,20 @@ const Hero = () => {
   });
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
   return (
-    <motion.section
-      className={`flex flex-col items-center lg:justify-end xsm:justify-center container h-[93vh]`}
-      ref={targetRef}
-      style={{
-        opacity,
-      }}
-      id="home"
-    >
-      <TextHeading scrollYProgress={scrollYProgress} />
-      <SvgAnimation />
-    </motion.section>
+    <div className="h-[100vh] snap">
+      <Nav />
+      <motion.div
+        className={`flex flex-col items-center justify-center container h-[100%] self-center`}
+        ref={targetRef}
+        style={{
+          opacity,
+        }}
+        id="home"
+      >
+        <TextHeading scrollYProgress={scrollYProgress} />
+        <SvgAnimation />
+      </motion.div>
+    </div>
   );
 };
 

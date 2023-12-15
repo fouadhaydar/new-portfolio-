@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { data } from "../../constance";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IconButton } from "@mui/material";
+import { ArrowUpward, GitHub } from "@mui/icons-material";
 
 type Paragraph = {
   id: string;
@@ -21,8 +22,12 @@ const CustomSection = ({
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const target = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target });
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 0]);
-  const y = useTransform(scrollYProgress, [0, 1], [-200, 200]);
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.5, 0.7, 1],
+    [0, 0.4, 1, 0.5, 0]
+  );
+  const y = useTransform(scrollYProgress, [0, 0.5, 1], [-200, 0, 200]);
 
   useEffect(() => {
     // Event handler function to update window width
@@ -38,10 +43,17 @@ const CustomSection = ({
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  useEffect(() => {
+    window.scrollTo(0, 5);
+  }, []);
 
   return (
-    <div className="lg:flex xsm:block justify-center lg:gap-7 xsm:gap-2 items-center md:snap-start">
-      <div className="md:h-[100vh] lg:w-1/2 xsm:w-full flex flex-col justify-center">
+    <div
+      className={`lg:flex xsm:block justify-center lg:gap-7 xsm:gap-2 items-center ${
+        windowWidth > 780 ? "snap" : ""
+      }`}
+    >
+      <div className="md:h-[100vh] lg:w-1/2 xsm:w-full flex flex-col justify-center ">
         <motion.div
           style={{
             opacity: windowWidth > 1200 ? opacity : 1,
@@ -57,6 +69,17 @@ const CustomSection = ({
               <p className="py-4 text-gray-400">{ele.paragraph}</p>
             </div>
           ))}
+          {title === "Conclusion" && (
+            <div className="flex items-center justify-center gap-4 xsm:flex-wrap sm:flex-nowrap">
+              <button className="w-full bg-blue-400 text-white rounded-md py-2 hover:bg-blue-500 hover:scale-105 transition ease-in-out delay-100">
+                See Demo
+              </button>
+              <button className="w-full bg-blue-400 text-white rounded-md py-2 flex items-center justify-center gap-2 hover:bg-blue-500 hover:scale-105 transition ease-in-out delay-100">
+                <GitHub />
+                <span> See the Code on Github </span>
+              </button>
+            </div>
+          )}
         </motion.div>
       </div>
       <motion.div
@@ -85,9 +108,14 @@ const ProjectsDetails = () => {
   };
 
   return (
-    <section className="text-white w-3/4 mx-auto flex flex-col gap-6">
-      <div className="flex items-center gap-2 md:sticky md:top-[70px] md:left-0 md:z-10 sm:mt-[70px]  pt-4">
-        <IconButton onClick={onclick} size="small" color="primary">
+    <section className="text-white w-3/4 mx-auto flex flex-col gap-6  mb-[20px]">
+      <div className="flex items-center gap-2 md:sticky md:top-[70px] md:left-0 md:z-10 sm:mt-[70px] pt-4">
+        <IconButton
+          onClick={onclick}
+          size="small"
+          color="primary"
+          className="hover:scale-110 transition ease-in-out delay-100"
+        >
           <ArrowBackIcon />
         </IconButton>
         <span className="text-[14px] text-gray-400">Go Back</span>
@@ -106,7 +134,22 @@ const ProjectsDetails = () => {
           />
         ))}
       </div>
-      {/* <footer className="my-40">footer</footer> */}
+      {window.innerWidth >= 500 && (
+        <IconButton
+          onClick={() => window.scrollTo(0, 0)}
+          color="primary"
+          style={{
+            position: "fixed",
+            right: "20px",
+            bottom: "10px",
+            backgroundColor: "white",
+            width: "40px",
+            height: "40px",
+          }}
+        >
+          <ArrowUpward />
+        </IconButton>
+      )}
     </section>
   );
 };

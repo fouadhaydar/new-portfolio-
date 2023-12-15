@@ -6,9 +6,14 @@ const Contact = () => {
   const [error, setError] = useState<null | string>(null);
   const [sucess, setSucess] = useState<null | string>(null);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [data, setData] = useState<
+    | undefined
+    | {
+        name: string;
+        email: string;
+        message: string;
+      }
+  >(undefined);
 
   const publikKey = import.meta.env.VITE_EMAIL_PUBLIK_KEY;
   const serviceId = import.meta.env.VITE_SURVICE_ID;
@@ -22,9 +27,7 @@ const Contact = () => {
       emailjs.sendForm(serviceId, templateId, form.current, publikKey).then(
         () => {
           setSucess("mesage was sent successfully");
-          setName("");
-          setEmail("");
-          setMessage("");
+          setData(undefined);
         },
         () => {
           setError("somthing went wrong please try again later");
@@ -34,18 +37,18 @@ const Contact = () => {
   };
   return (
     <div
-      className="text-white h-[100vh] w-3/4 mx-auto"
+      className="text-white h-[100vh] md:w-3/4 xsm:w-full mx-auto flex flex-col justify-center "
       style={{ scrollSnapAlign: "start" }}
       id="contact"
     >
-      <div className="xsm:hidden md:block my-12 relative top-[20px] pt-5 text-3xl w-full text-center">
-        <h1>Contact</h1>
+      <div className="xsm:hidden md:block my-12 relative top-[20px] pt-5 text-3xl w-full px-[20px]">
+        <h2>Contact</h2>
       </div>
-      <div className="flex gap-7 w-full justify-between h-full items-center">
+      <div className="flex gap-7 w-full justify-between items-center">
         <form
           ref={form}
           onSubmit={(e) => sendEmail(e)}
-          className="flex flex-col gap-7 flex-1 items-end p-[20px]"
+          className="flex flex-col gap-7 flex-1 md:items-end p-[20px]"
         >
           <div className="flex flex-col gap-3 w-full">
             <label htmlFor="user-name">Name</label>
@@ -56,9 +59,18 @@ const Contact = () => {
               id="user-name"
               placeholder="User Name"
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setName(e.target.value)
+                setData((prev) => {
+                  if (prev) {
+                    return { ...prev, name: e.target.value };
+                  } else
+                    return {
+                      name: e.target.value,
+                      email: "",
+                      message: "",
+                    };
+                })
               }
-              value={name}
+              value={data?.name || ""}
             />
           </div>
           <div className="flex flex-col gap-3 w-full">
@@ -70,9 +82,18 @@ const Contact = () => {
               className="p-4 outline-none border border-gray-400 rounded-[8px] bg-transparent"
               placeholder="Your Email"
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
+                setData((prev) => {
+                  if (prev) {
+                    return { ...prev, email: e.target.value };
+                  } else
+                    return {
+                      name: "",
+                      email: e.target.value,
+                      message: "",
+                    };
+                })
               }
-              value={email}
+              value={data?.email || ""}
             />
           </div>
           <div className="flex flex-col gap-3 w-full">
@@ -83,15 +104,28 @@ const Contact = () => {
               className="p-4 outline-none border border-gray-400 rounded-[8px] bg-transparent w-full"
               placeholder="Your Message"
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-                setMessage(e.target.value)
+                setData((prev) => {
+                  if (prev) {
+                    return { ...prev, message: e.target.value };
+                  } else
+                    return {
+                      name: "",
+                      email: "",
+                      message: e.target.value,
+                    };
+                })
               }
-              value={message}
+              value={data?.message || ""}
             />
           </div>
           <input
+            disabled={data == null}
             type="submit"
             value="Send"
-            className="p-3 bg-blue-400 text-white rounded-md min-w-[100px]"
+            className={`p-3 bg-blue-400 text-white rounded-md min-w-[100px] ${
+              data != undefined &&
+              "hover:bg-blue-500 hover:scale-105 transition ease-in-out delay-100 cursor-pointer"
+            }`}
           />
           {error && (
             <div className="text-red-700 w-full p-2 rounded-md bg-red-200 flex items-center gap-4">

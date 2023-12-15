@@ -14,7 +14,6 @@ export const Single = ({
   title: string;
 }) => {
   const targetRef = useRef<HTMLDivElement>(null);
-  // const navigate = useNavigate();
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -39,34 +38,27 @@ export const Single = ({
   const { scrollYProgress } = useScroll({
     target: targetRef,
   });
-  const y = useTransform(scrollYProgress, [0, 0.5, 1], [-300, 0, 300]);
+  const y = useTransform(scrollYProgress, [0, 0.5, 1], [-200, 1, 200]);
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 0]);
 
   return (
     <motion.div
-      className="flex xsm:flex-col md:flex-row justify-center items-center md:gap-6 xsm:gap-8 text-white h-[100vh]"
-      style={{
-        scrollSnapAlign: "start",
-        opacity: windowWidth > 780 ? opacity : 1,
-      }}
+      className="flex xsm:flex-col md:flex-row justify-center items-center md:gap-6 xsm:gap-8 text-white  h-[100vh] snap"
+      style={{ opacity: windowWidth > 780 ? opacity : 1 }}
     >
       <div
-        className=" md:w-[40%] xsm:max-w-[400px] rounded-[7px] overflow-hidden gap-8"
+        className=" md:w-[40%] xsm:max-w-[400px] rounded-[7px] overflow-hidden gap-8 border-[2px] border-blue-400 overlay"
         ref={targetRef}
       >
-        <img
-          src={dashBoard}
-          alt="laptop"
-          className=" w-full h-ful hover:scale-110 transition duration-150 ease-in-out text-black "
-        />
+        <img src={dashBoard} alt="laptop" className=" w-full h-ful " />
       </div>
       <motion.div
         style={{ y: windowWidth > 780 ? y : 0 }}
-        className="flex flex-col gap-6 md:w-[55%] xsm:max-w-[400px]"
+        className="flex flex-col gap-6 md:w-[55%] xsm:max-w-[500px]"
       >
         <h2 className="text-2xl font-bold">{title}</h2>
-        <div className="flex flex-col gap-4 items-start line-clamp-4 overflow-hidden">
-          <p className=" text-gray-400 line-clamp-3 overflow-hidden">{text}</p>
+        <div className="flex flex-col gap-4 items-start line-clamp-6 overflow-hidden">
+          <p className=" text-gray-400 line-clamp-5 overflow-hidden">{text}</p>
           <Link to={`/details/${route}`} className="text-blue-400">
             See Details
           </Link>
@@ -80,24 +72,34 @@ const Portfolio = () => {
   const target = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target,
-    offset: ["end end", "start start"],
+    offset: ["start start", "end end"],
   });
   const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 15,
+    stiffness: 50,
+    damping: 20,
   });
   // md:top-[20px] xsm:top-[10px]
   return (
-    <div className="text-white container relative" ref={target} id="projects">
-      <div className="xsm:hidden md:flex flex-col items-center sticky top-0 left-0 z-10">
-        <h1 className="md:text-3xl xsm:text-xl py-[20px] text-white">
-          Projects
-        </h1>
+    <div
+      className="text-white container relative snap"
+      ref={target}
+      id="portfolio"
+    >
+      <div className="md:hidden flex flex-col items-center sticky top-0">
         <motion.div
-          className="w-full h-[3px] rounded bg-blue-400"
+          className="w-[100vw] h-[3px] absolute rounded bg-blue-400"
           style={{ scaleX }}
         />
-        {/* ac92ff */}
+      </div>
+
+      <div className="xsm:hidden md:flex flex-col items-center sticky top-0 left-0 z-10">
+        <motion.div
+          className="w-[100vw] h-[3px] absolute rounded bg-blue-400"
+          style={{ scaleX }}
+        />
+        <h2 className="md:text-3xl xsm:text-xl py-[20px] text-white">
+          Projects
+        </h2>
       </div>
       <Single
         route="e-commerce"

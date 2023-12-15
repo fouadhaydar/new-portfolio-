@@ -4,14 +4,19 @@
 
 html {
   scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
 }
 
-* {
+:root {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  scrollbar-width: none;
+  /* scrollbar-width: none; */
+}
+
+.snap {
+  scroll-snap-align: start;
+  -webkit-scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 a {
@@ -20,11 +25,13 @@ a {
 
 body {
   background: black;
-  height: 100vh;
-  position: relative;
-  width: 100vw;
-  min-height: 100vh;
 }
+
+/* chrome & safarie hide scroll bar */
+/* body::-webkit-scrollbar {
+  display: none;
+} */
+
 .line-rounded {
   position: relative;
   @apply lg:w-5 lg:h-5 sm:w-3 sm:h-3 xsm:w-[10px] xsm:h-[10px] rounded-full bg-[#915EFF] top-[-40px];
@@ -42,33 +49,34 @@ body {
 .container {
   @apply md:w-3/4 xsm:w-[90%] max-w-[1200px] mx-auto;
 }
-
-/* body::before {
-  background-image: radial-gradient(
-      at 10% 29%,
-      rgb(38, 0, 143) 0px,
-      transparent 50%
-    ),
-    radial-gradient(at 33% 50%, rgb(0, 134, 42) 0px, transparent 50%);
-  height: 100vh;
-  position: absolute;
-  content: "";
-  z-index: -1;
-  width: 100%;
-  opacity: 0.4;
-  top: 0;
-  animation: gradient 15s ease infinite;
-  background-size: 300% 300%;
+.overlay {
+  position: relative;
 }
 
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-} */
+.overlay::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 0%;
+  /* top: 0; */
+  right: 0;
+  bottom: 50%;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 200ms ease-in-out;
+}
+
+.overlay:hover::after {
+  content: "see demo";
+  position: absolute;
+  height: 100%;
+  bottom: 0;
+  background-color: black;
+  opacity: 0.7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
