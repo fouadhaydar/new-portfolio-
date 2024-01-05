@@ -1,5 +1,4 @@
 import Hero from "./components/Hero";
-import Nav from "./components/Nav";
 import Portfolio from "./components/portfolio/Portfolio";
 import Contact from "./components/contact/Contact";
 import "./index.css";
@@ -10,10 +9,7 @@ import { ArrowUpward } from "@mui/icons-material";
 function App() {
   return (
     <main>
-      <div
-        className="bg-hero-pattern bg-cover bg-no-repeat bg-center"
-        // scroll-snap-type: y mandatory;
-      >
+      <div className="bg-hero-pattern bg-cover bg-no-repeat bg-center">
         {/* <Nav /> */}
         <Hero />
       </div>

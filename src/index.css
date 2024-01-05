@@ -27,11 +27,6 @@ body {
   background: black;
 }
 
-/* chrome & safarie hide scroll bar */
-/* body::-webkit-scrollbar {
-  display: none;
-} */
-
 .line-rounded {
   position: relative;
   @apply lg:w-5 lg:h-5 sm:w-3 sm:h-3 xsm:w-[10px] xsm:h-[10px] rounded-full bg-[#915EFF] top-[-40px];
@@ -58,7 +53,6 @@ body {
   position: absolute;
   width: 100%;
   height: 0%;
-  /* top: 0; */
   right: 0;
   bottom: 50%;
   background-color: black;

@@ -1,13 +1,12 @@
 import { Home } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
 import AppsIcon from "@mui/icons-material/Apps";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 
 const Nav = () => {
   // const navigate = useNavigate();
-  const scrollToSection = (id) => {
+  const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });

@@ -1,17 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-import dashBoard from "../../assets/dashboard.jpg";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { data } from "../../constance";
+import dashBoard from "../../../public/dashboard/Dashboard-light.png";
+import signUp from "../../../public/electornics/sign-up.png";
 
 export const Single = ({
   route,
   text,
   title,
+  image,
 }: {
   route: string;
   text: string;
   title: string;
+  image: string;
 }) => {
   const targetRef = useRef<HTMLDivElement>(null);
 
@@ -33,8 +36,6 @@ export const Single = ({
     };
   }, []);
 
-  // console.log(windowWidth);
-
   const { scrollYProgress } = useScroll({
     target: targetRef,
   });
@@ -47,10 +48,19 @@ export const Single = ({
       style={{ opacity: windowWidth > 780 ? opacity : 1 }}
     >
       <div
-        className=" md:w-[40%] xsm:max-w-[400px] rounded-[7px] overflow-hidden gap-8 border-[2px] border-blue-400 overlay"
+        className=" md:w-[40%] xsm:max-w-[400px] rounded-[7px] overflow-hidden gap-8 border-[2px] border-blue-400 "
         ref={targetRef}
       >
-        <img src={dashBoard} alt="laptop" className=" w-full h-ful " />
+        <a
+          href={`${
+            route === "dashboard"
+              ? "https://dashboard-electronics.netlify.app"
+              : "https://electronics-rust.vercel.app"
+          }`}
+          className="w-full h-full overlay"
+        >
+          <img src={image} alt="laptop" className=" w-full h-ful" />
+        </a>
       </div>
       <motion.div
         style={{ y: windowWidth > 780 ? y : 0 }}
@@ -78,7 +88,6 @@ const Portfolio = () => {
     stiffness: 50,
     damping: 20,
   });
-  // md:top-[20px] xsm:top-[10px]
   return (
     <div
       className="text-white container relative snap"
@@ -104,12 +113,14 @@ const Portfolio = () => {
       <Single
         route="e-commerce"
         title="E-commerce Web App"
-        text={data["e-commerce"].Overview[0].paragraph}
+        text={data["e-commerce"].Overview[0].paragraph!}
+        image={signUp}
       />
       <Single
         route="dashboard"
         title="Dashboard for the e-commerce"
-        text={data.dashboard.Overview[0].paragraph}
+        text={data.dashboard.Overview[0].paragraph!}
+        image={dashBoard}
       />
     </div>
   );

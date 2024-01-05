@@ -1,23 +1,35 @@
 import { useScroll, useTransform, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 import { data } from "../../constance";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IconButton } from "@mui/material";
 import { ArrowUpward, GitHub } from "@mui/icons-material";
+import { v4 as uuidv4 } from "uuid";
 
 type Paragraph = {
   id: string;
-  title?: string;
   paragraph: string;
 };
+
+type KeyType =
+  | "Overview"
+  | "Challanges"
+  | "Solutions"
+  | "Creating Process"
+  | "Conclusion"
+  | "Challanges & Solutions";
+
 const CustomSection = ({
   title,
   paragraph,
+  project,
+  image,
 }: {
+  image: string;
   title: string;
   paragraph: Paragraph[];
+  project: "dashboard" | "e-commerce";
 }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const target = useRef<HTMLDivElement>(null);
@@ -46,7 +58,6 @@ const CustomSection = ({
   useEffect(() => {
     window.scrollTo(0, 5);
   }, []);
-
   return (
     <div
       className={`lg:flex xsm:block justify-center lg:gap-7 xsm:gap-2 items-center ${
@@ -63,21 +74,36 @@ const CustomSection = ({
           <h2 className="text-xl font-semibold border-b-2 border-white mb-4 py-2 w-fit">
             {title}
           </h2>
-          {paragraph.map((ele) => (
-            <div key={ele.id}>
-              {ele.title && <h3 className="font-bold">{ele.title}</h3>}
-              <p className="py-4 text-gray-400">{ele.paragraph}</p>
-            </div>
-          ))}
+          {paragraph.map((ele) => {
+            return (
+              <div key={ele.id}>
+                <p className="py-4 text-gray-400">{ele.paragraph}</p>
+              </div>
+            );
+          })}
           {title === "Conclusion" && (
             <div className="flex items-center justify-center gap-4 xsm:flex-wrap sm:flex-nowrap">
-              <button className="w-full bg-blue-400 text-white rounded-md py-2 hover:bg-blue-500 hover:scale-105 transition ease-in-out delay-100">
+              <a
+                href={`${
+                  project === "dashboard"
+                    ? "https://dashboard-electronics.netlify.app"
+                    : "https://electronics-rust.vercel.app"
+                } `}
+                className="w-full bg-blue-400 text-white rounded-md py-2 hover:bg-blue-500 hover:scale-105 transition ease-in-out delay-100 text-center"
+              >
                 See Demo
-              </button>
-              <button className="w-full bg-blue-400 text-white rounded-md py-2 flex items-center justify-center gap-2 hover:bg-blue-500 hover:scale-105 transition ease-in-out delay-100">
+              </a>
+              <a
+                href={`${
+                  project === "dashboard"
+                    ? "https://github.com/fouadhaydar/Dashboard.git"
+                    : "https://github.com/fouadhaydar/electronics.git"
+                }`}
+                className="w-full bg-blue-400 text-white rounded-md py-2 flex items-center justify-center gap-2 hover:bg-blue-500 hover:scale-105 transition ease-in-out delay-100 text-center"
+              >
                 <GitHub />
                 <span> See the Code on Github </span>
-              </button>
+              </a>
             </div>
           )}
         </motion.div>
@@ -85,14 +111,20 @@ const CustomSection = ({
       <motion.div
         style={{ opacity }}
         ref={target}
-        className="xsm:hidden lg:block w-[500px] h-[300px] bg-white rounded-md"
-      />
+        className="xsm:hidden lg:flex w-[500px] h-[300px] bg-white rounded-md lg: justify-center items-center"
+      >
+        <img src={image} alt="image" />
+      </motion.div>
     </div>
   );
 };
 
 const ProjectsDetails = () => {
-  const { name } = useParams();
+  type Name = "dashboard" | "e-commerce";
+
+  const { name } = useParams<{
+    name: "dashboard" | "e-commerce";
+  }>();
   const navigate = useNavigate();
 
   const onclick = () => {
@@ -100,12 +132,19 @@ const ProjectsDetails = () => {
   };
 
   const getKeys = () => {
-    const keys: string[] = [];
-    for (const key in data["e-commerce"]) {
-      keys.push(key);
+    const keys: KeyType[] = [];
+    if (name) {
+      for (const key in data[name]) {
+        const customKey = key as KeyType;
+        keys.push(customKey);
+      }
     }
     return keys;
   };
+  if (name === undefined) {
+    navigate("/");
+    return <></>;
+  }
 
   return (
     <section className="text-white w-3/4 mx-auto flex flex-col gap-6  mb-[20px]">
@@ -126,13 +165,20 @@ const ProjectsDetails = () => {
       </div>
 
       <div>
-        {getKeys().map((key) => (
-          <CustomSection
-            key={uuidv4()}
-            title={key}
-            paragraph={data[name][key]}
-          />
-        ))}
+        {getKeys().map((key) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          const newKey = data[name as Name][key];
+          return (
+            <CustomSection
+              project={name}
+              key={uuidv4()}
+              title={key}
+              paragraph={newKey}
+              image={newKey[newKey.length - 1].image}
+            />
+          );
+        })}
       </div>
       {window.innerWidth >= 500 && (
         <IconButton
